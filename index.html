@@ -60,7 +60,14 @@
 
   const access_token = params.get("access_token");
   const refresh_token = params.get("refresh_token");
-
+  // Remove hash from URL after reading tokens
+  if (window.location.hash) {
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
+  }
   if (access_token && refresh_token) {
     client.auth.setSession({
       access_token,

@@ -43,41 +43,41 @@
   </div>
 
   <script>
-  const supabase = supabaseJs.createClient(
+  const { createClient } = supabase;
+
+  const client = createClient(
     "https://hantxrdhpkouwdozhnlu.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhbnR4cmRocGtvdXdkb3pobmx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MDMsImV4cCI6MjA3NzQ1NDQwM30.r7-NAbdCR2xN6p9P6bbqSpI1Nu3rzTT4z88j04pxq5E"
   );
 
-  // STEP 1: Get tokens from URL
+  // DEBUG: show hash
+  document.getElementById("msg").innerText =
+    "URL hash: " + window.location.hash;
+
+  // Read recovery tokens
   const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
 
   const access_token = params.get("access_token");
   const refresh_token = params.get("refresh_token");
 
-  // STEP 2: Set Supabase session (CRITICAL)
   if (access_token && refresh_token) {
-    supabase.auth.setSession({
+    client.auth.setSession({
       access_token,
       refresh_token,
     });
   }
 
-  // STEP 3: Update password
   async function resetPassword() {
     const password = document.getElementById("password").value;
 
-    if (!password) {
-      document.getElementById("msg").innerText = "Please enter a password";
-      return;
-    }
-
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await client.auth.updateUser({ password });
 
     document.getElementById("msg").innerText =
-      error ? error.message : "Password updated successfully! You can reopen the app.";
+      error ? error.message : "✅ Password updated successfully!";
   }
-  </script>
+</script>
+
 
 </body>
 </html>
